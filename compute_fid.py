@@ -20,23 +20,24 @@ def get_fid_for_dir_path(path_name, start_epoch, end_epoch, iter_step, stats_pat
     
     if if_one_dir:
         fid_score = fid.calculate_fid_given_paths(stats_path, path_name)
+        result_df.loc[i] = [how_many_eps, dataset_name, fid_score]
         file_name = 'FID_{}_{}_{}eps.csv'.format(model_name, dataset_name, how_many_eps)
         result_df.to_csv(file_name, index=False)
-    
-    # measuring time
-    start_time = time.time()
-    for i in range(start_epoch, end_epoch + 1, iter_step):
-        addon = 'epoch_' + str(i)
-        path_to_dir = Path(os.path.join(path_name, addon))
-        fid_score = fid.calculate_fid_given_paths(stats_path, path_to_dir)
-        result_df.loc[i] = [i, dataset_name, fid_score]
-        # result.append(fid_score)
-        print("FID epoch {}: {}".format(i, fid_score))
+    else:
+        # measuring time
+        start_time = time.time()
+        for i in range(start_epoch, end_epoch + 1, iter_step):
+            addon = 'epoch_' + str(i)
+            path_to_dir = Path(os.path.join(path_name, addon))
+            fid_score = fid.calculate_fid_given_paths(stats_path, path_to_dir)
+            result_df.loc[i] = [i, dataset_name, fid_score]
+            # result.append(fid_score)
+            print("FID epoch {}: {}".format(i, fid_score))
 
-    elapsed = time.time() - start_time
-    print(time.strftime("%H:%M:%S", time.gmtime(elapsed)))
-    file_name = 'FID_{}_{}_{}eps.csv'.format(model_name, dataset_name, how_many_eps)
-    result_df.to_csv(file_name, index=False)
+        elapsed = time.time() - start_time
+        print(time.strftime("%H:%M:%S", time.gmtime(elapsed)))
+        file_name = 'FID_{}_{}_{}eps.csv'.format(model_name, dataset_name, how_many_eps)
+        result_df.to_csv(file_name, index=False)
 
 if __name__ == "__main__":
     print("fid score calculator")
