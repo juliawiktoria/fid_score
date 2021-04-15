@@ -20,7 +20,7 @@ def get_fid_for_dir_path(path_name, start_epoch, end_epoch, iter_step, stats_pat
     
     if if_one_dir:
         fid_score = fid.calculate_fid_given_paths(stats_path, path_name)
-        result_df.loc[i] = [how_many_eps, dataset_name, fid_score]
+        result_df.loc[0] = [how_many_eps, dataset_name, fid_score]
         file_name = 'FID_{}_{}_{}eps.csv'.format(model_name, dataset_name, how_many_eps)
         result_df.to_csv(file_name, index=False)
     else:
